@@ -1,0 +1,10 @@
+[submodule "CTest/googletest"]
+	path = CTest/googletest
+	url = https://github.com/google/googletest.git
+
+[submodule "Target/LatticeCore"]
+	path = Target/LatticeCore
+	url = https://github.com/Rupemgera/LatticeCore.git
+[submodule "target/LatticeCore"]
+	path = target/LatticeCore
+	url = https://github.com/Rupemgera/LatticeCore.git

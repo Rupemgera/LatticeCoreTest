@@ -1,0 +1,15 @@
+[Bb]uild/
+[Bb]in/
+[Dd]ug/
+[Rr]elease/
+[Oo]ut/
+lib/
+.vs/
+.vscode/
+*.pyd*
+*.ilk
+*.pdb
+*.lib
+*.so
+CMakeSettings.json
+__pycache__
