@@ -95,34 +95,3 @@ TEST(parameterization_test, test_fixed_para_axis_y) {
       << tframe << std::endl
       << frame << std::endl;
 }
-
-// test whether Frame3d::metric is transform-invariant
-TEST(frame_test, test_frame_metric) {
-  auto seed_frame =
-      LatticeCore::QuaternionFrame(Eigen::Quaterniond::UnitRandom());
-  auto frame1 = seed_frame.to_rotation_matrix();
-  Matrix_3 frame2 = frame1 * -1;
-  frame2.col(2) = frame1.col(2);
-  EXPECT_NEAR(LatticeCore::Frame3d::metric(frame1, frame2), 0.0, 1e-9);
-}
-
-TEST(frame_test, test_metric_range) {
-  Matrix_3 frame1 = Matrix_3::Identity();
-  Matrix_3 frame2 = frame1;
-  const int n_case = 20;
-  double step = PI / n_case;
-  // std::vector<double> diffs(n_case);
-  double maxd = -1e20;
-  for (size_t i = 0; i < n_case; i++) {
-    double angle = step * i;
-    Eigen::AngleAxisd Rz(angle, V3d::UnitZ());
-    Eigen::AngleAxisd Rx(angle, V3d::UnitX());
-    frame2 = Rz * Rx * frame2;
-    double d = LatticeCore::Frame3d::metric(frame1, frame2);
-    // diffs[i] = d;
-    // std::cout << angle << " : " << d << std::endl;
-    if (d > maxd)
-      maxd = d;
-  }
-  EXPECT_GT(maxd, 1) << maxd;
-}
