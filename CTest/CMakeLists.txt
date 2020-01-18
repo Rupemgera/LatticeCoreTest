@@ -13,12 +13,15 @@ add_subdirectory(googletest)
 
 file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)
 
+find_package(dlib REQUIRED)
+message("CTets dlib : " ${dlib_FOUND})
+
 add_executable(${project_name} ${TEST_FILES})
 
 enable_testing()
 
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-target_link_libraries(${project_name} LatticeCore gtest gtest_main)
+target_link_libraries(${project_name} LatticeCore gtest gtest_main dlib::dlib)
 
 add_test(NAME unitTests COMMAND ${PROJECT_NAME})
