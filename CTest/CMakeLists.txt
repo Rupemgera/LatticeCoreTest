@@ -7,8 +7,6 @@ project(${project_name})
 # settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-add_definitions(-DTEST_DATA_PATH="${testdata_path}")
-
 add_subdirectory(googletest)
 
 file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)

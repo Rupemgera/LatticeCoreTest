@@ -12,4 +12,5 @@ lib/
 *.lib
 *.so
 CMakeSettings.json
+CTest/Testdata_path.h
 __pycache__
