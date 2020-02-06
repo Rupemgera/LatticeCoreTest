@@ -36,5 +36,5 @@ TEST_F(MeshTest, Readin) {
 
 TEST_F(MeshTest, GPU) {
   int i = lattice.GPU_info();
-  EXPECT_NE(i, 0);
+  EXPECT_EQ(i, 0);
 }
