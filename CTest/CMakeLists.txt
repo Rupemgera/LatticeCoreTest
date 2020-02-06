@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 set(project_name CTest)
 project(${project_name})
@@ -9,7 +9,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 add_subdirectory(googletest)
 
-file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+    file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)
+else()
+    file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx CONFIG_DEPENDS)
+endif()
 
 find_package(dlib REQUIRED)
 message("CTets dlib : " ${dlib_FOUND})
@@ -20,6 +24,6 @@ enable_testing()
 
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-target_link_libraries(${project_name} LatticeCore gtest gtest_main dlib::dlib)
+target_link_libraries(${project_name} PRIVATE LatticeCore gtest gtest_main dlib::dlib)
 
 add_test(NAME unitTests COMMAND ${PROJECT_NAME})
