@@ -81,3 +81,6 @@ TEST(optimization_test, test_local_minima) {
   std::cout << x << std::endl;
   EXPECT_NEAR(x(0) * x(0) + x(1) * x(1), 1.0, 1e-9);
 }
+
+// TEST(optimization_test, test_gpu) {
+// }
