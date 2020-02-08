@@ -4,27 +4,30 @@
 #include "gtest/gtest.h"
 
 TEST(gpu_test, device_info_test) {
-  int i = device_info();
+  int i = device_info(true);
   EXPECT_EQ(i, 0);
 }
 
 TEST(gpu_test, rosenbrock_test) {
-  constexpr int N = 8000000;
+  constexpr int N = 4000000;
+  // constexpr int N = (1 << 22) + (1 << 10);
   float *x = new float[N];
-  for (int i = 0; i < N; ++i) {
-    x[i] = 0.0;
+  for (long long i = 0; i < N; ++i) {
+    x[i] = 0;
   }
 
-  float c_sum = 0.0;
-  auto rosen_cpu = [x, &c_sum]() {
-    for (int id = 0; id < N - 1; ++id) {
-      c_sum +=
-          (x[id + 1] - x[id] * x[id]) * (x[id + 1] - x[id] * x[id]) * 100.0 +
-          (x[id] - 1.0) * (x[id] - 1.0);
-    }
-  };
-
-  std::cout << "CPU time: " << time_check(rosen_cpu) << "ms\n";
+  double c_sum = 0.0;
+  auto start = std::chrono::system_clock::now();
+  for (long long id = 0; id < N - 1; ++id) {
+    c_sum += (x[id + 1] - x[id] * x[id]) * (x[id + 1] - x[id] * x[id]) * 100.0 +
+             (x[id] - 1.0) * (x[id] - 1.0);
+    // if (id % 1000000 == 0)
+    //   std::cout << "id: " << id << " sum: " << std::setprecision(12) << c_sum
+    //             << std::endl;
+  }
+  auto end = std::chrono::system_clock::now();
+  double dura = std::chrono::duration<double, std::milli>(end - start).count();
+  std::cout << "CPU time: " << dura << "ms\n";
 
   float g_sum = 0.0;
   auto rosen_gpu = [x, &g_sum]() { g_sum = Rosenbrock_GPU(x, N); };
