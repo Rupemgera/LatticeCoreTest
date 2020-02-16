@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-static const std::string model_name("/beam");
+// static const std::string model_name("/beam");
 static const int num_model_cells = 865;
 
 template <class F> double time_check(F &f) {

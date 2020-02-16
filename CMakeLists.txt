@@ -18,9 +18,16 @@ add_subdirectory(target/LatticeCore)
 # include_directories("target/LatticeCore")
 
 add_subdirectory(CTest)
+add_subdirectory(console)
 
 set(testdata_path "${PROJECT_SOURCE_DIR}/testdata")
 configure_file(
 	"${PROJECT_SOURCE_DIR}/Testdata_path.h.in"
 	"${PROJECT_SOURCE_DIR}/CTest/Testdata_path.h"
+	NEWLINE_STYLE LF
+)
+configure_file(
+	"${PROJECT_SOURCE_DIR}/Testdata_path.h.in"
+	"${PROJECT_SOURCE_DIR}/console/Testdata_path.h"
+	NEWLINE_STYLE LF
 )

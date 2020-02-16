@@ -9,7 +9,7 @@ TEST(gpu_test, device_info_test) {
 }
 
 TEST(gpu_test, rosenbrock_test) {
-  constexpr int N = 4000000;
+  constexpr int N = 4006000;
   // constexpr int N = (1 << 22) + (1 << 10);
   float *x = new float[N];
   for (long long i = 0; i < N; ++i) {
@@ -29,7 +29,7 @@ TEST(gpu_test, rosenbrock_test) {
   double dura = std::chrono::duration<double, std::milli>(end - start).count();
   std::cout << "CPU time: " << dura << "ms\n";
 
-  float g_sum = 0.0;
+  double g_sum = 0.0;
   auto rosen_gpu = [x, &g_sum]() { g_sum = Rosenbrock_GPU(x, N); };
 
   std::cout << "GPU time: " << time_check(rosen_gpu) << "ms\n";
