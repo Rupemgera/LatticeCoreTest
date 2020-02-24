@@ -24,6 +24,6 @@ public:
 
 int main() {
   LatticeConsole console;
-  console.smooth();
+  // console.smooth();
   return 0;
 }

@@ -14,7 +14,11 @@ cmake_minimum_required(VERSION 3.10)
 #     endif()
 # endif()
 
-add_subdirectory(target/LatticeCore)
+# option(target_path "the path to LatticeCore" "target/LatticeCore")
+# set(target_path "target/LatticeCore")
+set(target_path ${CMAKE_SOURCE_DIR}/../LatticeShell/Modules)
+message("target " ${target_path})
+add_subdirectory(${target_path}/LatticeCore LatticeCore.out)
 # include_directories("target/LatticeCore")
 
 add_subdirectory(CTest)

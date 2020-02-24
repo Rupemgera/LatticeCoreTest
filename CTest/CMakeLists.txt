@@ -9,10 +9,19 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 add_subdirectory(googletest)
 
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)
-else()
-    file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx CONFIG_DEPENDS)
+# if(${CMAKE_VERSION} VERSION_LESS 3.12)
+#     file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx)
+# else()
+#     file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.cxx CONFIG_DEPENDS)
+# endif()
+set(TEST_FILES 
+# "mesh_test.cxx"
+"frame_test.cxx"
+"field_test.cxx"
+)
+option(cuda_test_on "wether test CUDA modules" OFF)
+if(${cuda_test_on})
+    set(${TEST_FILES} ${TEST_FILES} "GPU_test.cxx")
 endif()
 
 find_package(dlib REQUIRED)
