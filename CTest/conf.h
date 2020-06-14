@@ -7,9 +7,12 @@
 // static const std::string model_name("/beam");
 static const int num_model_cells = 865;
 
-template <class F> double time_check(F &f) {
+template<class F, typename... Types>
+double
+time_check(F&& f, Types&&... args)
+{
   auto start = std::chrono::system_clock::now();
-  f();
+  f(std::forward<Types>(args)...);
   auto end = std::chrono::system_clock::now();
   double dura = std::chrono::duration<double, std::milli>(end - start).count();
   return dura;

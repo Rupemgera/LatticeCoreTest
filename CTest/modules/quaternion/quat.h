@@ -1,51 +1,63 @@
 #pragma once
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 typedef Eigen::Matrix<double, 4, 1> Vector4f;
 typedef Eigen::Matrix<double, 3, 1> Vector3f;
 typedef Eigen::Matrix<double, 3, 3> Matrix3f;
 
-class Quaternion : public Eigen::Matrix<double, 4, 1> {
+class Quaternion : public Eigen::Matrix<double, 4, 1>
+{
 public:
   typedef Eigen::Matrix<double, 4, 1> Base;
 
-  Quaternion() : Base() {}
-  Quaternion(double x, double y, double z, double w) : Base(x, y, z, w) {}
-  Quaternion(const Eigen::Matrix<double, 3, 1> &xyz, double w)
-      : Base(xyz.x(), xyz.y(), xyz.z(), w) {}
+  Quaternion()
+    : Base()
+  {}
+  Quaternion(double x, double y, double z, double w)
+    : Base(x, y, z, w)
+  {}
+  Quaternion(const Eigen::Matrix<double, 3, 1>& xyz, double w)
+    : Base(xyz.x(), xyz.y(), xyz.z(), w)
+  {}
 
   /// Construct a vector from MatrixBase (needed to play nice with Eigen)
-  template <typename Derived>
-  Quaternion(const Eigen::MatrixBase<Derived> &p) : Base(p) {}
+  template<typename Derived>
+  Quaternion(const Eigen::MatrixBase<Derived>& p)
+    : Base(p)
+  {}
 
   /// Assign a vector from MatrixBase (needed to play nice with Eigen)
-  template <typename Derived>
-  Quaternion &operator=(const Eigen::MatrixBase<Derived> &p) {
+  template<typename Derived>
+  Quaternion& operator=(const Eigen::MatrixBase<Derived>& p)
+  {
     this->Base::operator=(p);
     return *this;
   }
 
-  friend Quaternion operator*(const Quaternion &q0, const Quaternion &q1) {
+  friend Quaternion operator*(const Quaternion& q0, const Quaternion& q1)
+  {
     Quaternion result;
     result << q0.head<3>().cross(q1.head<3>()) + q1.w() * q0.head<3>() +
-                  q0.w() * q1.head<3>(),
-        q0.w() * q1.w() - q0.head<3>().dot(q1.head<3>());
+                q0.w() * q1.head<3>(),
+      q0.w() * q1.w() - q0.head<3>().dot(q1.head<3>());
     return result;
   }
 
   Quaternion complement() const { return Quaternion(-x(), -y(), -z(), w()); }
 
-  Quaternion exp() const {
+  Quaternion exp() const
+  {
     double ri = head<3>().norm();
     double sinRi = std::sin(ri);
     double cosRi = std::cos(ri);
     double expW = std::exp(w());
 
     return (Quaternion() << head<3>() * (expW * sinRi / ri), expW * cosRi)
-        .finished();
+      .finished();
   }
 
-  Quaternion log() const {
+  Quaternion log() const
+  {
     double ri = head<3>().norm();
     double rq = norm();
     double acosR = std::acos(w() / rq);
@@ -53,22 +65,31 @@ public:
     return (Quaternion() << head<3>() * (acosR / ri), logRq).finished();
   }
 
-  Vector4f pow(double exponent) const {
+  Vector4f pow(double exponent) const
+  {
     return Quaternion(log() * exponent).exp();
   }
 
-  Eigen::Matrix<double, 3, 3> toMatrix() const {
+  Eigen::Matrix<double, 3, 3> toMatrix() const
+  {
     double xx = x() * x(), yy = y() * y(), zz = z() * z();
     double xy = x() * y(), xz = x() * z(), yz = y() * z();
     double xw = x() * w(), yw = y() * w(), zw = z() * w();
 
-    return (Matrix3f() << 1 - 2 * yy - 2 * zz, 2 * (xy - zw), 2 * (xz + yw),
-            2 * (xy + zw), 1 - 2 * xx - 2 * zz, 2 * (yz - xw), 2 * (xz - yw),
-            2 * (yz + xw), 1 - 2 * xx - 2 * yy)
-        .finished();
+    return (Matrix3f() << 1 - 2 * yy - 2 * zz,
+            2 * (xy - zw),
+            2 * (xz + yw),
+            2 * (xy + zw),
+            1 - 2 * xx - 2 * zz,
+            2 * (yz - xw),
+            2 * (xz - yw),
+            2 * (yz + xw),
+            1 - 2 * xx - 2 * yy)
+      .finished();
   }
 
-  Quaternion align(const Vector3f &n_) const {
+  Quaternion align(const Vector3f& n_) const
+  {
     Quaternion n = complement() * (Quaternion(n_, 0.f) * *this);
     Quaternion na = n.cwiseAbs();
 
@@ -85,14 +106,16 @@ public:
     return *this * s;
   }
 
-  static Quaternion findRotation(const Quaternion &q, const Quaternion &ref) {
-    double dp[4] = {ref.dot(Quaternion(q.w(), q.z(), -q.y(), -q.x())),
-                    ref.dot(Quaternion(-q.z(), q.w(), q.x(), -q.y())),
-                    ref.dot(Quaternion(q.y(), -q.x(), q.w(), -q.z())),
-                    ref.dot(Quaternion(q.x(), q.y(), q.z(), q.w()))};
+  static Quaternion findRotation(const Quaternion& q, const Quaternion& ref)
+  {
+    double dp[4] = { ref.dot(Quaternion(q.w(), q.z(), -q.y(), -q.x())),
+                     ref.dot(Quaternion(-q.z(), q.w(), q.x(), -q.y())),
+                     ref.dot(Quaternion(q.y(), -q.x(), q.w(), -q.z())),
+                     ref.dot(Quaternion(q.x(), q.y(), q.z(), q.w())) };
 
-    double a[4] = {std::abs(dp[0]), std::abs(dp[1]), std::abs(dp[2]),
-                   std::abs(dp[3])};
+    double a[4] = {
+      std::abs(dp[0]), std::abs(dp[1]), std::abs(dp[2]), std::abs(dp[3])
+    };
 
     // find M, N, max indices of a[i]
     int M = 0, N = 1, m = 2, n = 3;
@@ -130,15 +153,18 @@ public:
     return result;
   }
 
-  static Quaternion applyRotation(const Quaternion &q, const Quaternion &ref) {
-    Quaternion qi[4] = {Quaternion(q.w(), q.z(), -q.y(), -q.x()),
-                        Quaternion(-q.z(), q.w(), q.x(), -q.y()),
-                        Quaternion(q.y(), -q.x(), q.w(), -q.z()),
-                        Quaternion(q.x(), q.y(), q.z(), q.w())};
-    double dp[4] = {ref.dot(qi[0]), ref.dot(qi[1]), ref.dot(qi[2]),
-                    ref.dot(qi[3])};
-    double a[4] = {std::abs(dp[0]), std::abs(dp[1]), std::abs(dp[2]),
-                   std::abs(dp[3])};
+  static Quaternion applyRotation(const Quaternion& q, const Quaternion& ref)
+  {
+    Quaternion qi[4] = { Quaternion(q.w(), q.z(), -q.y(), -q.x()),
+                         Quaternion(-q.z(), q.w(), q.x(), -q.y()),
+                         Quaternion(q.y(), -q.x(), q.w(), -q.z()),
+                         Quaternion(q.x(), q.y(), q.z(), q.w()) };
+    double dp[4] = {
+      ref.dot(qi[0]), ref.dot(qi[1]), ref.dot(qi[2]), ref.dot(qi[3])
+    };
+    double a[4] = {
+      std::abs(dp[0]), std::abs(dp[1]), std::abs(dp[2]), std::abs(dp[3])
+    };
 
     // find M, N, max indices of a[i]
     int M = 0, N = 1, m = 2, n = 3;

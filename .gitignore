@@ -14,3 +14,4 @@ lib/
 CMakeSettings.json
 CTest/Testdata_path.h
 __pycache__
+console/Testdata_path.h
