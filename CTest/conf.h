@@ -1,5 +1,6 @@
 #pragma once
 #include "Testdata_path.h"
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iostream>
