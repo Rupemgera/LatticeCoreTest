@@ -19,6 +19,7 @@ set(TEST_FILES
 # "frame_test.cxx"
 # "field_test.cxx"
     "FEM_test.cxx"
+    "PSO_test.cxx"
 )
 option(cuda_test_on "wether test CUDA modules" OFF)
 if(${cuda_test_on})
