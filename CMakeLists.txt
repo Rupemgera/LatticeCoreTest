@@ -29,10 +29,9 @@ if (NOT Eigen3_FOUND)
 	endif()
 endif()
 
-set(target_path ${CMAKE_SOURCE_DIR}/../LatticeShell/Modules)
+set(target_path ${CMAKE_SOURCE_DIR}/../QVLattice)
 message("target " ${target_path})
 add_subdirectory(${target_path}/LatticeCore LatticeCore.out)
-# include_directories("target/LatticeCore")
 
 add_subdirectory(CTest)
 

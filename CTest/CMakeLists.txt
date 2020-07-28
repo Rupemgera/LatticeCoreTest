@@ -18,16 +18,15 @@ set(TEST_FILES
 # "mesh_test.cxx"
 # "frame_test.cxx"
 # "field_test.cxx"
-    "FEM_test.cxx"
+    # "FEM_test.cxx"
     # "PSO_test.cxx"
+    # "cutgraph_test.cxx"
+    "tet_param.cxx"
 )
 option(cuda_test_on "wether test CUDA modules" OFF)
 if(${cuda_test_on})
     set(${TEST_FILES} ${TEST_FILES} "GPU_test.cxx")
 endif()
-
-find_package(dlib REQUIRED)
-message("CTets dlib : " ${dlib_FOUND})
 
 add_executable(${project_name} ${TEST_FILES})
 
@@ -37,6 +36,6 @@ enable_testing()
 
 target_include_directories(${project_name} PUBLIC ${target_path}/LatticeCore)
 
-target_link_libraries(${project_name} PUBLIC  gtest gtest_main gmock_main dlib::dlib LatticeCore)
+target_link_libraries(${project_name} PUBLIC  gtest gtest_main gmock_main LatticeCore)
 
 add_test(NAME unitTests COMMAND ${PROJECT_NAME})

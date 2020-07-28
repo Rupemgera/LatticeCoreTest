@@ -1,5 +1,4 @@
-#include "LatticeCore/Implementation/field/frame_field.h"
-#include "LatticeCore/Implementation/mesh/geometry.h"
+#include "LatticeCore/Analysis/field/frame_field.h"
 #include "conf.h"
 #include "dlib/optimization.h"
 #include "gtest/gtest.h"
@@ -7,8 +6,9 @@
 
 using column_vector = dlib::matrix<double, 0, 1>;
 
-TEST(optimization_test, Rosenbrock_benchmark_test) {
-  auto obj = [](const column_vector &m) {
+TEST(optimization_test, Rosenbrock_benchmark_test)
+{
+  auto obj = [](const column_vector& m) {
     int n = m.nr();
     double sum = 0.0;
     for (int i = 0; i < n - 1; ++i) {
@@ -18,7 +18,7 @@ TEST(optimization_test, Rosenbrock_benchmark_test) {
     return sum;
   };
 
-  auto grad = [](const column_vector &m) {
+  auto grad = [](const column_vector& m) {
     int n = m.nr();
     column_vector res = dlib::zeros_matrix<double>(n, 1);
     for (int i = 1; i < n - 1; i++) {
@@ -36,7 +36,10 @@ TEST(optimization_test, Rosenbrock_benchmark_test) {
   auto start = std::chrono::system_clock::now();
   dlib::find_min(dlib::lbfgs_search_strategy(40),
                  dlib::objective_delta_stop_strategy(1e-7) /*.be_verbose()*/,
-                 obj, grad, x, -1);
+                 obj,
+                 grad,
+                 x,
+                 -1);
   auto end = std::chrono::system_clock::now();
   double dura = std::chrono::duration<double, std::milli>(end - start).count();
   std::cout << "Rosenbrock, CPU: " << dura << "ms\n";
@@ -44,8 +47,9 @@ TEST(optimization_test, Rosenbrock_benchmark_test) {
   EXPECT_NEAR(dlib::sum(x), N, 1e-9 * N);
 }
 
-TEST(optimization_test, sphere_test) {
-  auto obj = [](const column_vector &m) {
+TEST(optimization_test, sphere_test)
+{
+  auto obj = [](const column_vector& m) {
     int n = m.nr();
     double sum = 0.0;
     for (int i = 0; i < n; ++i) {
@@ -54,7 +58,7 @@ TEST(optimization_test, sphere_test) {
     return sum;
   };
 
-  auto grad = [](const column_vector &m) {
+  auto grad = [](const column_vector& m) {
     int n = m.nr();
     column_vector res = dlib::zeros_matrix<double>(n, 1);
     for (int i = 0; i < n; ++i) {
@@ -71,7 +75,11 @@ TEST(optimization_test, sphere_test) {
 
   auto start = std::chrono::system_clock::now();
   dlib::find_min(dlib::lbfgs_search_strategy(40),
-                 dlib::objective_delta_stop_strategy(1e-9), obj, grad, x, -1);
+                 dlib::objective_delta_stop_strategy(1e-9),
+                 obj,
+                 grad,
+                 x,
+                 -1);
   auto end = std::chrono::system_clock::now();
   double dura = std::chrono::duration<double, std::milli>(end - start).count();
   std::cout << "Sphere, CPU: " << dura << "ms\n";

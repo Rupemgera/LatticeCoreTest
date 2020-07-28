@@ -1,6 +1,6 @@
 
-#include "LatticeCore/Implementation/field/frame_field.h"
-#include "LatticeCore/Implementation/mesh/geometry.h"
+#include "LatticeCore/Analysis/field/frame_field.h"
+#include "LatticeCore/Mesh/geometry.h"
 #include "conf.h"
 #include "modules/quaternion/quat.h"
 #include "gtest/gtest.h"
